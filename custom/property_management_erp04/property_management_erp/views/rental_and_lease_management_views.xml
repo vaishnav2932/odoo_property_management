@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- form view -->
+    <record id="rental_lease_view_form" model="ir.ui.view">
+        <field name="name">rental.lease.view.form</field>
+        <field name="model">rentalandlease.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button type="object" name="action_create_invoice" class="btn-primary" string="Create invoice"
+                            invisible="state != 'confirmed' or invoice_state == True"/>
+                    <button type="object" name="action_confirmed" class="btn-primary" state="confirmed" string="Confirm"
+                            invisible="state == 'confirmed'"/>
+                    <button type="object" name="action_closed" state="closed" string="Close"/>
+                    <button type="object" name="action_returned" state="returned" string="Return"/>
+                    <button type="object" name="action_expired" state="expired" string="Expire"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="PAID" bg_color="text-bg-success"
+                            invisible="is_invoice_paid != True"/>
+                    <widget name="web_ribbon" title="NOT PAID" bg_color="text-bg-success"
+                            invisible="is_invoice_paid == True or state != 'confirmed'"/>
+                    <field name="is_invoice_paid" invisible="1"/>
+                    <div name="button_box">
+                        <button type="object" name="action_get_rent_and_lease_invoice" icon="oi-group">
+                            <field string="invoices" name="invoice_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <h1>
+                        <field name="sequence"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="tenant_id" readonly="state == 'confirmed'"/>
+                            <field name="type" readonly="state == 'confirmed'"/>
+                            <field name="start_date" string="Date" widget="daterange"
+                                   options="{'end_date_field': 'end_date'}" readonly="state == 'confirmed'"/>
+                            <field name="end_date" invisible="1"/>
+                        </group>
+                        <group>
+<!--                            <field name="company_id"/>-->
+                            <field name="total_days"/>
+                            <field name="total"/>
+                        </group>
+                        <notebook>
+                            <page name="Property">
+                                <field name="property_ids" readonly="state == 'confirmed'"/>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <chatter>
+                </chatter>
+            </form>
+        </field>
+    </record>
+    <!--list view-->
+    <record id="rental_lease_view_list" model="ir.ui.view">
+        <field name="name">rental.lease.view.list</field>
+        <field name="model">rentalandlease.management</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence"/>
+                <field name="type"/>
+                <field name="company_id"/>
+                <field name="total_days"/>
+                <field name="total"/>
+            </list>
+        </field>
+    </record>
+    <!--search view-->
+    <record id="rent_lease_view_search" model="ir.ui.view">
+        <field name="name">rental.lease.view.search</field>
+        <field name="model">rentalandlease.management</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Rental" name="type" domain="[('type', '=','rental')]"/>
+                <filter string="Lease" name="type" domain="[('type', '=','lease')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Type" name="type" context="{'group_by': 'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!--    window action -->
+    <record id="action_rent_and_lease" model="ir.actions.act_window">
+        <field name="name">Rental and Lease Management</field>
+        <field name="res_model">rentalandlease.management</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="0_view_noncontent_smiling_face">Create New product</p>
+        </field>
+    </record>
+</odoo>

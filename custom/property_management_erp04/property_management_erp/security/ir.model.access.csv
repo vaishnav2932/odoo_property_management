@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_property_management,access.property.management,model_property_management,base.group_user,1,1,1,1
+access_rental_and_lease_management,access.rental_and_lease.management,model_rental_and_lease_management,base.group_user,1,1,1,1
+access_property_facilities,access.property.facilities,model_property_facilities,base.group_user,1,1,1,1
+access_property_line,access.property.line,model_property_line,base.group_user,1,1,1,1

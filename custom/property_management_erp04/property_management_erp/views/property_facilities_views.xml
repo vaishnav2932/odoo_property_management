@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--window action-->
+    <record id="action_property_facilities" model="ir.actions.act_window">
+        <field name="name">Property Facilities</field>
+        <field name="res_model">property.facilities</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="0_view_noncontent_smiling_face">Create New Facility</p>
+        </field>
+    </record>
+</odoo>

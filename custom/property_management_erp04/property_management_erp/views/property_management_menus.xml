@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    main menu-->
+    <menuitem id="menu_property_management_root" name="Property Management" sequence="1"/>
+    <!--    sub menu-->
+    <menuitem id="menu_property_management_property" name="Configuration" parent="menu_property_management_root"
+              sequence="2"/>
+    <!--    action menu-->
+    <menuitem id="menu_property_management_rental_lease" name="Rental and Lease"
+              parent="menu_property_management_root" action="action_rent_and_lease" sequence="1"/>
+    <menuitem id="menu_property_management_property_property" name="Property" parent="menu_property_management_property"
+              action="action_property_management" sequence="2"/>
+    <menuitem id="menu_property_facilities" name="Property facilities" parent="menu_property_management_property"
+              action="action_property_facilities" sequence="3"/>
+</odoo>
