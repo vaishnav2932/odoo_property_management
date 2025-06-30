@@ -16,6 +16,8 @@
              "views/property_line_view.xml",
              "views/property_management_menus.xml",
              "views/ir_sequence_data.xml",
+             "data/mail.xml",
+             "data/ir_crone_data.xml"
              ],
     'application': True,
     'auto_install': True,

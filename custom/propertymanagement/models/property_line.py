@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api
-import logging
-_logger = logging.getLogger(__name__)
+from odoo.addons.test_convert.tests.test_env import record
 
 
 class PropertyLine(models.Model):
@@ -18,14 +17,11 @@ class PropertyLine(models.Model):
     original_rent_amount = fields.Float(related='property_id.rent')
     original_legal_amount = fields.Float(related='property_id.legal_amount')
     account_move_id = fields.Many2many('account.move')
-    # invoiced_days = fields.Integer(compute="_compute_invoiced_days", store=True)
-    # remaining_days = fields.Integer(compute="_compute_remaining_days")
     invoice_line_ids = fields.One2many('account.move.line', 'property_line_id')
     quantity_invoiced = fields.Float(compute="_compute_quantity_invoiced",
                                      store=False,
-                                     digits=(16, 2),
                                      )
-    quantity_to_invoice = fields.Float(compute='_compute_quantity_to_invoice',)
+    quantity_to_invoice = fields.Float(compute='_compute_quantity_to_invoice', )
 
     @api.depends(
         'invoice_line_ids',
@@ -35,30 +31,17 @@ class PropertyLine(models.Model):
     )
     def _compute_quantity_invoiced(self):
         for record in self:
-            # posted_lines = record.invoice_line_ids.filtered(lambda l: l.move_id.state == 'posted')
-            valid_lines = record.invoice_line_ids.filtered(lambda l: l.move_id.state in ['draft', 'posted'])
-
-            latest_line = valid_lines.sorted(key=lambda l: l.move_id.date or fields.Date.today(), reverse=True)[:1]
+            # valid_lines = record.invoice_line_ids.filtered_domain([('move_id.state', '=', 'posted')])
+            valid_lines = record.invoice_line_ids.filtered(
+                lambda l: l.move_id and l.move_id.state == 'posted'
+            )
+            latest_line = valid_lines.sorted(lambda l: l.move_id.date or fields.Date.today(), reverse=True)[:1]
             record.quantity_invoiced = latest_line.quantity if latest_line else 0.0
-            _logger.info(f"[PropertyLine ID: {record.id}] Quantity Invoiced = {record.quantity_invoiced}")
 
     @api.depends('total_days', 'quantity_invoiced')
     def _compute_quantity_to_invoice(self):
         for record in self:
             record.quantity_to_invoice = record.total_days - record.quantity_invoiced
-            print(record.quantity_to_invoice)
-
-    # def _inverse_invoiced_quantity(self):
-    #     for record in self:
-    #         if not record.invoice_line_ids:
-    #             continue
-    #         total_qty = record.invoiced_quantity
-    #         for line in record.invoice_line_ids:
-    #             if total_qty <= 0:
-    #                 line.quantity = 0
-    #             else:
-    #                 line.quantity = (line.quantity / sum(record.invoice_line_ids.mapped('quantity'))) * total_qty
-    #                 total_qty -= line.quantity
 
     @api.depends('amount', 'total_days')
     def _compute_total_amount(self):

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="change_to_expired" model="ir.cron">
+            <field name="name">Change status to expire</field>
+            <field name="model_id" ref="model_rental_and_lease_management"/>
+            <field name="state">code</field>
+            <field name="code">model.change_to_expire()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="payment_reminder_mail" model="ir.cron">
+            <field name="name">Payment reminder</field>
+            <field name="model_id" ref="model_rental_and_lease_management"/>
+            <field name="state">code</field>
+            <field name="code">model.payment_reminder()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>
+
+
+
+

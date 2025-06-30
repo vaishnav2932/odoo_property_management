@@ -17,11 +17,19 @@
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" title="PAID" bg_color="text-bg-success"
-                            invisible="is_invoice_paid != True"/>
-                    <widget name="web_ribbon" title="NOT PAID" bg_color="text-bg-success"
-                            invisible="is_invoice_paid == True or state != 'confirmed'"/>
-                    <field name="is_invoice_paid" invisible="1"/>
+                   <widget name="web_ribbon" title="Paid"
+                            bg_color="text-bg-success"
+                            invisible="payment_state != 'paid'"/>
+                    <widget name="web_ribbon" title="In Payment"
+                            bg_color="text-bg-warning"
+                            invisible="payment_state != 'in_payment'"/>
+                    <widget name="web_ribbon" title="partial"
+                            bg_color="text-bg-warning"
+                            invisible="payment_state != 'partial'"/>
+                    <widget name="web_ribbon" title="Not Paid"
+                            bg_color="text-bg-danger"
+                            invisible="payment_state != 'not_paid'"/>
+
                     <div name="button_box">
                         <button type="object" name="action_get_rent_and_lease_invoice" icon="oi-group">
                             <field string="invoices" name="invoice_count" widget="statinfo"/>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+   <data>
+       <record id="confirmation_mail" model="mail.template">
+           <field name="name">Confirmation mail</field>
+           <field name="model_id" ref="propertymanagement.model_rental_and_lease_management"/>
+           <field name="subject">Confirmation mail</field>
+           <field name="email_to">{{object.tenant_id.email}}</field>
+           <field name="body_html" type="html">
+               <div style="margin: 0px; padding: 0px;">
+                   <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                       <br/>
+                       <br/>
+                      <b> Your order <span t-out="object.display_name"/> is confirmed</b>
+                       <br/>
+                       <b>Duration : <span t-out="object.total_days"/> day </b>
+                       <br/>
+                       <b>Total amount : <span t-out="object.total"/> </b>
+
+                   </p>
+                   <br/>
+               </div>
+           </field>
+           <field name="auto_delete" eval="True"/>
+       </record>
+
+       <record id="payment_reminder" model="mail.template">
+           <field name="name">Payment reminder mail</field>
+            <field name="model_id" ref="propertymanagement.model_rental_and_lease_management"/>
+           <field name="subject">"{{ object.display_name }}" Payment reminder</field>
+           <field name="email_to">{{object.tenant_id.email}}</field>
+           <field name="body_html" type="html">
+               <div style="margin: 0px; padding: 0px;">
+                   <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                       <br/>
+                       <br/>
+                       <b>Your payment due on <span t-out="object.end_date"/></b>
+                       <br/>
+                       <b>Order no : <span t-out="object.display_name"/></b>
+                       <br/>
+                       <b>Total amount : <span t-out="object.total"/> </b>
+                   </p>
+               </div>
+           </field>
+           <field name="auto_delete" eval="True"/>
+       </record>
+
+
+       <record id="closing_order" model="mail.template">
+           <field name="name">Order closing</field>
+            <field name="model_id" ref="propertymanagement.model_rental_and_lease_management"/>
+           <field name="subject">Closing Order</field>
+           <field name="email_to">{{object.tenant_id.email}}</field>
+           <field name="body_html" type="html">
+               <div style="margin: 0px; padding: 0px;">
+                   <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                       <br/>
+                       <br/>
+                       <b>Your order <span t-out="object.display_name"/> is closing</b>
+                       <br/>
+                       <b>Duration : <span t-out="object.total_days"/></b>
+                       <br/>
+                       <b>Total amount : <span t-out="object.total"/></b>
+                   </p>
+               </div>
+           </field>
+           <field name="auto_delete" eval="True"/>
+       </record>
+   </data>
+</odoo>
