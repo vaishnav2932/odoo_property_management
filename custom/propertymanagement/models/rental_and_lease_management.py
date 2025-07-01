@@ -42,6 +42,8 @@ class RentAndLease(models.Model):
     state = fields.Selection(
         [
             ('draft', 'Draft'),
+            ('inapprove', 'In Approve'),
+            ('approved', 'Approved'),
             ('confirmed', 'Confirmed'),
             ('closed', 'Closed'),
             ('returned', 'Returned'),
@@ -145,8 +147,10 @@ class RentAndLease(models.Model):
             ], limit=1)
 
             invoice_lines = []
-            if draft_invoice:
-                for line in record.property_ids:
+
+            for line in record.property_ids:
+                should_append = True
+                if draft_invoice:
                     matching_line = draft_invoice.invoice_line_ids.filtered(
                         lambda l: l.property_line_id.id == line.id
                     )
@@ -155,24 +159,20 @@ class RentAndLease(models.Model):
                             matching_line.write({
                                 'quantity': line.quantity_to_invoice,
                             })
-                    else:
-                        invoice_lines.append(fields.Command.create({
-                            'name': line.property_id.property_name,
-                            'quantity': line.quantity_to_invoice,
-                            'price_unit': line.amount or 0.0,
-                            'property_line_id': line.id,
-                        }))
-                if invoice_lines:
-                    draft_invoice.write({'invoice_line_ids': invoice_lines})
-                invoice = draft_invoice
-            else:
-                for line in record.property_ids:
+                        should_append = False  # Don't add again
+                if should_append:
                     invoice_lines.append(fields.Command.create({
                         'name': line.property_id.property_name,
                         'quantity': line.quantity_to_invoice,
                         'price_unit': line.amount or 0.0,
                         'property_line_id': line.id,
                     }))
+
+            if draft_invoice:
+                if invoice_lines:
+                    draft_invoice.write({'invoice_line_ids': invoice_lines})
+                invoice = draft_invoice
+            else:
                 invoice = self.env['account.move'].create({
                     'partner_id': record.tenant_id.id,
                     'invoice_date': fields.Date.today(),
@@ -181,6 +181,7 @@ class RentAndLease(models.Model):
                     'rent_lease_id': record.id,
                 })
                 record.invoiced_ids = [fields.Command.link(invoice.id)]
+
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'account.move',
@@ -201,18 +202,28 @@ class RentAndLease(models.Model):
         }
 
     def action_confirmed(self):
-        for record in self:
-            attachments = self.env['ir.attachment'].search([
-                ('res_model', '=', record._name),
-                ('res_id', '=', record.id)
-            ])
-            if attachments:
-                record.state = "confirmed"
+        attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', '=', self.id)
+        ])
+        if attachments:
+            if self.env.user.has_group(
+                    'propertymanagement.property_group_user') and self.state != "approved":
+                raise ValidationError("Need manager approval to confirm.")
             else:
-                raise ValidationError("Attach a file to confirm.")
+                self.state = "confirmed"
+                template = self.env.ref("propertymanagement.confirmation_mail")
+                email_values = {'email_from': self.env.user.email}
+                template.send_mail(self.id, force_send=True, email_values=email_values)
+        else:
+            raise ValidationError("Attach a file to confirm.")
 
-            template = self.env.ref('propertymanagement.confirmation_mail')
-            template.send_mail(self.id, force_send=True)
+    def action_to_approved(self):
+        self.state = "inapprove"
+
+    def action_approve(self):
+        if self.env.user.has_group('propertymanagement.property_group_manager'):
+            self.state = "approved"
 
     def action_closed(self):
         for record in self:
@@ -227,6 +238,9 @@ class RentAndLease(models.Model):
     def action_expired(self):
         for record in self:
             record.state = "expired"
+            template = self.env.ref("property_management_erp.expiry_order")
+            email_values = {'email_from': self.env.user.email}
+            template.send_mail(self.id, force_send=True, email_values=email_values)
         return True
 
     @api.model
@@ -238,7 +252,7 @@ class RentAndLease(models.Model):
     def change_to_expire(self):
         today = date.today()
         records = self.search([
-            ('end_date', '<=', today),
+            ('end_date', '>=', today),
             ('state', '!=', 'expired')
         ])
         for record in records:
@@ -255,5 +269,3 @@ class RentAndLease(models.Model):
             template = self.env.ref("propertymanagement.payment_reminder")
             email_values = {'email_from': self.env.user.email}
             template.send_mail(record.id, force_send=True, email_values=email_values)
-
-

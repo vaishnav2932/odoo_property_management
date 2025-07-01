@@ -39,9 +39,12 @@ class Property(models.Model):
 
     def unlink(self):
         for record in self:
-            related_rents = self.env['rental_and_lease.management'].search(
-                [('property_ids.property_id', '=', record.property_name)])
-            related_rents.unlink()
+            # Find all property.line records that use this property
+            related_lines = self.env['property.line'].search([
+                ('property_id', '=', record.id)
+            ])
+            # Delete only the related lines, not the whole rent order
+            related_lines.unlink()
         return super(Property, self).unlink()
 
     def _compute_rental_lease_count(self):

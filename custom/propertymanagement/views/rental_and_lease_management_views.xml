@@ -8,16 +8,20 @@
             <form>
                 <header>
                     <button type="object" name="action_create_invoice" class="btn-primary" string="Create invoice"
-                            invisible="state != 'confirmed' or not is_remaining_to_invoice"/>
+                            invisible="state != 'confirmed' or not is_remaining_to_invoice or is_fully_invoiced == True"/>
                     <button type="object" name="action_confirmed" class="btn-primary" state="confirmed" string="Confirm"
                             invisible="state == 'confirmed'"/>
+                   <button type="object" name="action_to_approved" class="btn-primary" string="Send to approve"
+                            groups="property_management_erp.property_group_user" invisible="state != 'draft'"/>
+                    <button type="object" name="action_approve" class="btn-primary" state="approved" string="Approve"
+                            groups="property_management_erp.property_group_manager" invisible="state != 'inapprove'"/>
                     <button type="object" name="action_closed" state="closed" string="Close"/>
                     <button type="object" name="action_returned" state="returned" string="Return"/>
                     <button type="object" name="action_expired" state="expired" string="Expire"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
-                   <widget name="web_ribbon" title="Paid"
+                    <widget name="web_ribbon" title="Paid"
                             bg_color="text-bg-success"
                             invisible="payment_state != 'paid'"/>
                     <widget name="web_ribbon" title="In Payment"
@@ -47,7 +51,7 @@
                             <field name="end_date" invisible="1"/>
                         </group>
                         <group>
-<!--                            <field name="company_id"/>-->
+                            <field name="company_id"/>
                             <field name="total_days"/>
                             <field name="total"/>
                         </group>

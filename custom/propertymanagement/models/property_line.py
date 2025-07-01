@@ -31,11 +31,8 @@ class PropertyLine(models.Model):
     )
     def _compute_quantity_invoiced(self):
         for record in self:
-            # valid_lines = record.invoice_line_ids.filtered_domain([('move_id.state', '=', 'posted')])
-            valid_lines = record.invoice_line_ids.filtered(
-                lambda l: l.move_id and l.move_id.state == 'posted'
-            )
-            latest_line = valid_lines.sorted(lambda l: l.move_id.date or fields.Date.today(), reverse=True)[:1]
+            latest_line = record.invoice_line_ids.filtered(lambda l: l.move_id.state in ['posted']).sorted(
+                lambda l: l.move_id.date or fields.Date.today(), reverse=True)[:1]
             record.quantity_invoiced = latest_line.quantity if latest_line else 0.0
 
     @api.depends('total_days', 'quantity_invoiced')
@@ -65,8 +62,3 @@ class PropertyLine(models.Model):
             elif record.property_rent_lease_id.type == 'lease':
                 record.property_id.legal_amount = record.amount
 
-    def unlink(self):
-        for record in self:
-            self.env['rental_and_lease.management'].search([
-                ('property_id', '=', record.id)
-            ]).unlink()
