@@ -238,7 +238,7 @@ class RentAndLease(models.Model):
     def action_expired(self):
         for record in self:
             record.state = "expired"
-            template = self.env.ref("property_management_erp.expiry_order")
+            template = self.env.ref("propertymanagement.expiry_order")
             email_values = {'email_from': self.env.user.email}
             template.send_mail(self.id, force_send=True, email_values=email_values)
         return True
@@ -269,3 +269,15 @@ class RentAndLease(models.Model):
             template = self.env.ref("propertymanagement.payment_reminder")
             email_values = {'email_from': self.env.user.email}
             template.send_mail(record.id, force_send=True, email_values=email_values)
+
+    # def print_sample_report(self):
+    #     data = {
+    #
+    #         'model_id': self.id,
+    #         'to_date': self.start_date,
+    #         'from_date': self.end_date,
+    #         'property_id': self.property_id.id,
+    #         'property_name': self.property_id.property_name
+    #     }
+    #     # docids = self.env['purchase.order'].search([]).ids
+    #     return self.env.ref('propertymanagement.action_report_rent_lease_order').report_action(None, data=data)

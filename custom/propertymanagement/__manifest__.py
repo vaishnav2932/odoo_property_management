@@ -17,11 +17,17 @@
         "views/rental_and_lease_management_views.xml",
         "views/property_facilities_views.xml",
         "views/property_line_view.xml",
+        "views/reprot_wizard_views.xml",
         "views/property_management_menus.xml",
         "views/ir_sequence_data.xml",
+        "reports/ir.actions.report.xml",
+        "reports/report_template.xml",
         "data/mail.xml",
-        "data/ir_crone_data.xml"
+        "data/ir_crone_data.xml",
+        # "reports/ir.actions.report.xml",
+        # "reports/report_template.xml",
     ],
+
     'application': True,
     'auto_install': True,
     'installable': True,

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_order_form_inherit_milestone" model="ir.ui.view">
+        <field name="name">sale.order.form.milestone.project</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Create Project button in header -->
+            <xpath expr="//header" position="inside">
+                <button name="create_project"
+                        type="object"
+                        string="Create Project"
+                        class="btn-primary"
+                />
+            </xpath>
+           <xpath expr="//field[@name='order_line']/list//field[@name='price_unit']" position="after">
+                <field name="milestone"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sale_order" model="ir.actions.act_window">
+        <field name="name">Sale Order</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

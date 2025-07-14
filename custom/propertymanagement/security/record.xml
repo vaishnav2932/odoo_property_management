@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="own_company_record" model="ir.rule">
-        <field name="name">User own company record</field>
+    <record id="user_own_company_rule" model="ir.rule">
+        <field name="name">User Read Own Company Records Only</field>
         <field name="model_id" ref="model_rental_and_lease_management"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', '=', user.company_id.id)]</field>
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="manager_all_company_rule" model="ir.rule">
+        <field name="name">Manager All Company Access</field>
+        <field name="model_id" ref="model_rental_and_lease_management"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4, ref('property_group_manager'))]"/>
     </record>
 </odoo>

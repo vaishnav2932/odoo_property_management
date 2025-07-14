@@ -11,10 +11,11 @@
                             invisible="state != 'confirmed' or not is_remaining_to_invoice or is_fully_invoiced == True"/>
                     <button type="object" name="action_confirmed" class="btn-primary" state="confirmed" string="Confirm"
                             invisible="state == 'confirmed'"/>
-                   <button type="object" name="action_to_approved" class="btn-primary" string="Send to approve"
-                            groups="property_management_erp.property_group_user" invisible="state != 'draft'"/>
+<!--                    <button type="object" name="print_sample_report" string="report"/>-->
+                    <button type="object" name="action_to_approved" class="btn-primary" string="Send to approve"
+                            groups="propertymanagement.property_group_user" invisible="state != 'draft'"/>
                     <button type="object" name="action_approve" class="btn-primary" state="approved" string="Approve"
-                            groups="property_management_erp.property_group_manager" invisible="state != 'inapprove'"/>
+                            groups="propertymanagement.property_group_manager" invisible="state != 'inapprove'"/>
                     <button type="object" name="action_closed" state="closed" string="Close"/>
                     <button type="object" name="action_returned" state="returned" string="Return"/>
                     <button type="object" name="action_expired" state="expired" string="Expire"/>

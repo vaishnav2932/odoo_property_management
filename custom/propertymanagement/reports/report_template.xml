@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="report_rent_lease_pdf">
+        <t t-call="web.basic_layout">
+            <t t-set="docs" t-value="docs"/>
+            <div class="page">
+                <h2>Rent Lease Report</h2>
+                <p><strong>From:</strong> <t t-esc="data.get('property_name')"/></p>
+                <p><strong>From:</strong> <t t-esc="data.get('from_date')"/></p>
+                <p><strong>To:</strong> <t t-esc="data.get('to_date')"/></p>
+
+                <!-- Example content -->
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Property</th>
+                            <th>Tenant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="record">
+                            <td><t t-esc="record.property_id.name"/></td>
+                            <td><t t-esc="record.tenant_id.name"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

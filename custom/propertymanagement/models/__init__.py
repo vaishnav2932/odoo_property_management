@@ -6,3 +6,4 @@ from .import property_line
 from .import account_move
 from .import account_move_line
 from .import property_owner_record
+from .import report

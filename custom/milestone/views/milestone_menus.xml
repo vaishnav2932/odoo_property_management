@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--    main menu-->
+        <menuitem id="milestone_root" name="Milestone" sequence="1"/>
+<!--submenu-->
+    <menuitem id="milestone_milestone" name="Configuration" parent="milestone_root"
+              sequence="2"/>
+<!--    action-->
+    <menuitem id="menu_milestone_inherit" name="Milestone" action="action_sale_order"
+              parent="milestone_milestone" sequence="1"/>
+    <menuitem id="menu_sale_ordr_line_inherit" name="Sale order line" action="action_sale_order_line"
+              parent="milestone_milestone" sequence="2"/>
+
+</odoo>

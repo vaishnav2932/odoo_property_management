@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Wizard Form View for Rent Lease Report -->
+    <record id="rentlease_report_wizard_view_form" model="ir.ui.view">
+        <field name="name">rentlease.report.wizard.form</field>
+        <field name="model">rentlease.report.wizard</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <form string="Rent Lease Report">
+                <group>
+                    <field name="property_id"/>
+                </group>
+                <group>
+                    <field name="from_date" string="From"/>
+                    <field name="to_date" string="To"/>
+                </group>
+                <footer>
+                    <!-- Add these buttons back when ready -->
+                     <button name="print_pdf_report" string="Print" type="object"/>
+                    <!-- <button string="Cancel" special="cancel" class="btn-secondary"/> -->
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action to open the Wizard -->
+    <record id="action_rentlease_report_window" model="ir.actions.act_window">
+        <field name="name">Rental and Lease Report</field>
+        <field name="res_model">rentlease.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field> <!-- This makes the wizard open in a popup -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Use this wizard to generate a rent or lease report.</p>
+        </field>
+    </record>
+
+</odoo>
