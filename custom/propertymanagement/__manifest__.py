@@ -4,7 +4,7 @@
     'summary': """ An ERP for property management """,
     'description': """ A full ERP for property management """,
     'author': "Vyshnav",
-    'depends': ['base', 'mail', 'account', 'sale'],
+    'depends': ['base', 'mail', 'account', 'sale', 'web'],
     'category': "Property management",
     'maintainer': "Vyshnav<vyshnav@gmail.com>",
     'sequence': 1,

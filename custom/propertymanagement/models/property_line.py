@@ -10,7 +10,7 @@ class PropertyLine(models.Model):
 
     property_id = fields.Many2one("property.management", string="Property name")
     sequence = fields.Char(related="property_rent_lease_id.sequence")
-    total_amount = fields.Float(compute="_compute_total_amount")
+    total_amount = fields.Float(compute="_compute_total_amount",store=True)
     property_rent_lease_id = fields.Many2one("rental_and_lease.management")
     amount = fields.Float(compute="_compute_amount", readonly=False, inverse="_inverse_amount", store=False)
     total_days = fields.Integer(related="property_rent_lease_id.total_days", inverse="_inverse_total_days")

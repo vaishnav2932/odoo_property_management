@@ -1,5 +1,4 @@
-from odoo import models, fields
-from datetime import datetime
+from odoo import models
 
 
 class ReportRentLease(models.AbstractModel):
@@ -7,12 +6,11 @@ class ReportRentLease(models.AbstractModel):
     _description = 'Rent Lease PDF Report'
 
     def _get_report_values(self, docids, data=None):
-        today_str = datetime.today().strftime('%d-%m-%Y')  # e.g., 14-07-2025
-
+        docs = self.env['rentlease.report.wizard'].browse(docids)
         return {
             'doc_ids': docids,
             'doc_model': 'rentlease.report.wizard',
-            'data': data.get('data') if data else {},
-            'today': today_str,
-            # Add today's date here
+            'docs': docs,
+            'data': data,
         }
+
