@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <record id="action_report_rent_lease_order" model="ir.actions.report">
-        <field name="name">Rent Lease Order</field>
-        <field name="model">rental_and_lease.management</field>
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">propertymanagement.report_rent_lease_pdf</field>
-        <field name="report_file">propertymanagement.report_rent_lease_pdf</field>
-        <field name="binding_model_id" ref="model_rental_and_lease_management"/>
-    </record>
+   <record id="action_report_rent_lease_order" model="ir.actions.report">
+    <field name="name">Rent Lease Report</field>
+    <field name="model">rentlease.report.wizard</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">propertymanagement.report_rent_lease_pdf</field>
+    <field name="print_report_name">'Rent_Lease_Report'</field>
+</record>
+
 </odoo>
