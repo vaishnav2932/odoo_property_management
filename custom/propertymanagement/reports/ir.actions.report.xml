@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
+    <!-- Report Action -->
     <record id="action_report_rent_lease_order" model="ir.actions.report">
         <field name="name">Rent Lease Report</field>
         <field name="model">rentlease.report.wizard</field>
@@ -8,4 +9,7 @@
         <field name="report_file">propertymanagement.report_rent_lease_pdf</field>
         <field name="print_report_name">'Rent_Lease_Report'</field>
     </record>
+
+    <!-- A3 Landscape Paper Format -->
+
 </odoo>

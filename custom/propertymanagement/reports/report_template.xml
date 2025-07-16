@@ -1,128 +1,92 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <template id="report_rent_lease_pdf">
         <t t-call="web.html_container">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <div class="mb-3">
-                            <h2>Rent Lease Report</h2>
-                            <p>
-                                <strong>Printed on:</strong>
-                                <t t-esc="today"/>
-                            </p>
-                            <p>
-                                <strong>Property:</strong>
-                                <t t-esc="data['form_data'].get('property_name')"/>
-                            </p>
-                        </div>
-                        <table class="table table-sm mt-3" style="width: 100%; border-collapse: collapse;" border="1">
-                            <thead>
-                                <tr>
-                                    <th>Property</th>
-                                    <th>Owner</th>
-                                    <th>Sequence</th>
-                                    <th>Tenant</th>
-                                    <th>State</th>
-                                    <th>Type</th>
-                                    <th>Amount</th>
-                                    <th>Start</th>
-                                    <th>End</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr t-foreach="data['report_lines']" t-as="record">
-                                    <td>
-                                        <t t-esc="record[0]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[1]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[2]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[3]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[4]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[5]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[8]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[6]"/>
-                                    </td>
-                                    <td>
-                                        <t t-esc="record[7]"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <t t-call="web.external_layout">
+                <div class="page">
+
+                    <!-- Report Header -->
+                    <div class="mb-3">
+                        <h2>Rent Lease Report</h2>
+                        <p><strong>Printed on:</strong> <t t-esc="today"/></p>
+
+                        <t t-if="data['property_count'] == 1">
+                            <p><strong>Property:</strong> <t t-esc="data['property']"/></p>
+                            <p><strong>Owner:</strong> <t t-esc="data['owner']"/></p>
+                        </t>
+
+                        <t t-if="data['tenant_count'] == 1">
+                            <p><strong>Tenant:</strong> <t t-esc="data['tenant']"/></p>
+                        </t>
+
+                        <t t-if="not data['type_column']">
+                            <p><strong>Type:</strong> <t t-esc="data['type']"/></p>
+                        </t>
+
+                        <t t-if="not data['state_column']">
+                            <p><strong>State:</strong> <t t-esc="data['state']"/></p>
+                        </t>
+
+                        <t t-if="not data['owner_column']">
+                            <p><strong>Owner:</strong> <t t-esc="data['owner_name']"/></p>
+                        </t>
                     </div>
-                </t>
+
+                    <!-- Table Section -->
+                    <table class="table table-sm mt-3" style="width: 100%; border-collapse: collapse;" border="1">
+                        <thead>
+                            <tr>
+                                <th>SN</th>
+                                <t t-if="data['property_count'] != 1">
+                                    <th>Property</th>
+                                    <t t-if="data['owner_column']">
+                                        <th>Owner</th>
+                                    </t>
+                                </t>
+                                <th>Sequence</th>
+                                <t t-if="data['tenant_count'] != 1">
+                                    <th>Tenant</th>
+                                </t>
+                                <t t-if="data['state_column']">
+                                    <th>State</th>
+                                </t>
+                                <t t-if="data['type_column']">
+                                    <th>Type</th>
+                                </t>
+                                <th>Amount</th>
+                                <th>Start</th>
+                                <th>End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="data['report_lines']" t-as="record">
+                                <tr>
+                                        <td><t t-esc="record['sno']"/></td>
+                                    <t t-if="data['property_count'] != 1">
+                                        <td><t t-esc="record['property']"/></td>
+                                        <t t-if="data['owner_column']">
+                                            <td><t t-esc="record['owner']"/></td>
+                                        </t>
+                                    </t>
+                                    <td><t t-esc="record['sequence']"/></td>
+                                    <t t-if="data['tenant_count'] != 1">
+                                        <td><t t-esc="record['tenant']"/></td>
+                                    </t>
+                                    <t t-if="data['state_column']">
+                                        <td><t t-esc="record['state']"/></td>
+                                    </t>
+                                    <t t-if="data['type_column']">
+                                        <td><t t-esc="record['type']"/></td>
+                                    </t>
+                                    <td><t t-esc="record['amount']"/></td>
+                                    <td><t t-esc="record['start_date']"/></td>
+                                    <td><t t-esc="record['end_date']"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                </div>
             </t>
+        </t>
     </template>
 </odoo>
-
-        <!--<odoo>-->
-        <!--    <template id="report_rent_lease_pdf">-->
-        <!--        <t t-call="web.basic_layout">-->
-        <!--            <div class="page" style="width: 42cm; height: 29.7cm;">-->
-        <!--                <div class="mb-3">-->
-        <!--                    <h2>Rent Lease Report</h2>-->
-        <!--                    <p>-->
-        <!--                        <strong>Company:</strong>-->
-        <!--                        <t t-esc="user.company_id.name"/>-->
-        <!--                    </p>-->
-        <!--                    <p>-->
-        <!--                        <strong>Printed on:</strong>-->
-        <!--                        <t t-esc="today"/>-->
-        <!--                    </p>-->
-        <!--                    <p>-->
-        <!--                        <strong>Property:</strong>-->
-        <!--                        <t t-esc="data['form_data'].get('property_name')"/>-->
-        <!--                    </p>-->
-        <!--                </div>-->
-
-        <!--                <table class="table table-sm mt-3">-->
-        <!--                    <thead>-->
-        <!--                        <tr>-->
-        <!--                            <th>Property</th>-->
-        <!--                            <th>Owner</th>-->
-        <!--                            <th>Sequence</th>-->
-        <!--                            <th>Tenant</th>-->
-        <!--                            <th>State</th>-->
-        <!--                            <th>Type</th>-->
-        <!--                        </tr>-->
-        <!--                    </thead>-->
-        <!--                    <tbody>-->
-        <!--                        <tr t-foreach="data['report_lines']" t-as="record">-->
-        <!--                            <td>-->
-        <!--                                <t t-esc="record[0]"/>-->
-        <!--                            </td>-->
-        <!--                            <td>-->
-        <!--                                <t t-esc="record[1]"/>-->
-        <!--                            </td>-->
-        <!--                            <td>-->
-        <!--                                <t t-esc="record[2]"/>-->
-        <!--                            </td>-->
-        <!--                            <td>-->
-        <!--                                <t t-esc="record[3]"/>-->
-        <!--                            </td>-->
-        <!--                            <td>-->
-        <!--                                <t t-esc="record[4]"/>-->
-        <!--                            </td>-->
-        <!--                            <td>-->
-        <!--                                <t t-esc="record[5]"/>-->
-        <!--                            </td>-->
-        <!--                        </tr>-->
-        <!--                    </tbody>-->
-        <!--                </table>-->
-        <!--            </div>-->
-        <!--        </t>-->
-        <!--    </template>-->
-        <!--</odoo>-->
-

@@ -18,14 +18,14 @@ class RentLeaseReport(models.TransientModel):
             ('closed', 'Closed'),
             ('returned', 'Returned'),
             ('expired', 'Expired'),
-        ], default='draft', tracking=True
+        ],
     )
     owner_id = fields.Many2one('res.partner')
     tenant_ids = fields.Many2many('res.partner')
     type = fields.Selection([
         ('rental', 'Rental'),
         ('lease', 'Lease'),
-    ], default='rental')
+    ], )
 
     def print_pdf_report(self):
         conditions = []
@@ -51,8 +51,6 @@ class RentLeaseReport(models.TransientModel):
         if self.to_date:
             conditions.append("rental_and_lease_management.start_date <= %s")
             params.append(self.to_date)
-        if not conditions:
-            raise ValidationError("Fill at least one field.")
         query = f"""
             SELECT
                 property_management.property_name,
@@ -74,25 +72,54 @@ class RentLeaseReport(models.TransientModel):
                 rental_and_lease_management ON property_line.property_rent_lease_id = rental_and_lease_management.id
             INNER JOIN
                 res_partner AS res_partner_tenant ON rental_and_lease_management.tenant_id = res_partner_tenant.id
-            WHERE
-                {' AND '.join(conditions)}
+            
         """
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
         self.env.cr.execute(query, tuple(params))
-        records = self.env.cr.fetchall()
+        results = self.env.cr.fetchall()
+        records = [{
+            'sno': i + 1,
+            'property': row[0],
+            'owner': row[1],
+            'sequence': row[2],
+            'tenant': row[3],
+            'state': row[4],
+            'type': row[5],
+            'start_date': row[6],
+            'end_date': row[7],
+            'amount': row[8],
+        } for i, row in enumerate(results)]
         print(records)
         if not records:
             raise ValidationError("No records found.")
         today_str = datetime.today().strftime('%d-%m-%Y')
+        property_count = len(self.property_ids)
+        tenant_count = len(self.tenant_ids)
+        type_column = not bool(self.type)
+        state_column = not bool(self.state)
+        owner_column = not bool(self.owner_id.complete_name)
+
         data = {
-            'form_data': {
-                'from_date': self.from_date,
-                'to_date': self.to_date,
-                'state': self.state,
-                'type': self.type,
-                'today': today_str
-            },
+
+            'from_date': self.from_date,
+            'to_date': self.to_date,
+            'state': self.state if self.state else None,
+            'type': self.type if self.type else None,
+            'property': self.property_ids.property_name if self.property_ids and property_count == 1 else '',
+            'tenant': self.tenant_ids.complete_name if self.tenant_ids and tenant_count == 1 else '',
+            'owner': self.property_ids.owner_id.complete_name if property_count == 1 else '',
+            'owner_name': self.owner_id.complete_name if self.owner_id.complete_name else None,
+            'today': today_str,
             'report_lines': records,
+            'property_count': property_count,
+            'tenant_count': tenant_count,
+            'type_column': type_column,
+            'state_column': state_column,
+            'owner_column': owner_column,
+
         }
+
         return self.env.ref('propertymanagement.action_report_rent_lease_order').report_action(
             self, data=data
         )
