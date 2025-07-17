@@ -27,6 +27,11 @@
         # "reports/ir.actions.report.xml",
         # "reports/report_template.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'propertymanagement/static/src/js/action_manger.js',
+        ],
+    },
 
     'application': True,
     'auto_install': True,

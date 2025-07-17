@@ -1,4 +1,8 @@
 from datetime import datetime
+import json
+import io
+import xlsxwriter
+from odoo.tools import json_default
 from odoo import fields, models
 from odoo.exceptions import ValidationError
 
@@ -123,3 +127,67 @@ class RentLeaseReport(models.TransientModel):
         return self.env.ref('propertymanagement.action_report_rent_lease_order').report_action(
             self, data=data
         )
+
+    def print_xlsx_report(self):
+        data = {
+            'from_date': self.from_date.strftime('%d-%m-%Y') if self.from_date else '',
+            'to_date': self.to_date.strftime('%d-%m-%Y') if self.to_date else '',
+            'state': self.state,
+            'type': self.type,
+            'properties': [prop.property_name for prop in self.property_ids],
+            'tenants': [tenant.name for tenant in self.tenant_ids],
+            'owner': self.owner_id.name if self.owner_id else '',
+        }
+        return {
+            'type': 'ir.actions.report',
+            'data': {
+                'model': 'rentlease.report.wizard',
+                'options': json.dumps(data),
+                'output_format': 'xlsx',
+                'report_name': 'Rent Lease Report',
+            },
+            'report_type': 'xlsx',
+        }
+
+    def get_xlsx_report(self, data, response):
+        output = io.BytesIO()
+        workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+        sheet = workbook.add_worksheet()
+
+        head = workbook.add_format({'align': 'center', 'bold': True, 'font_size': 14})
+        label_format = workbook.add_format({'bold': True})
+        txt_format = workbook.add_format({'font_size': 10})
+
+        # Title
+        sheet.merge_range('B2:E2', 'Rent/Lease XLSX Report', head)
+
+        # Filters Info
+        sheet.write('A4', 'From Date:', label_format)
+        sheet.write('B4', data.get('from_date', ''))
+        sheet.write('A5', 'To Date:', label_format)
+        sheet.write('B5', data.get('to_date', ''))
+        sheet.write('A6', 'Type:', label_format)
+        sheet.write('B6', data.get('type', ''))
+        sheet.write('A7', 'State:', label_format)
+        sheet.write('B7', data.get('state', ''))
+        sheet.write('A8', 'Owner:', label_format)
+        sheet.write('B8', data.get('owner', ''))
+
+        # Property List
+        sheet.write('A10', 'Properties:', label_format)
+        row = 10
+        for prop in data.get('properties', []):
+            sheet.write(row, 1, prop, txt_format)
+            row += 1
+
+        # Tenant List
+        sheet.write(row + 1, 0, 'Tenants:', label_format)
+        row += 2
+        for tenant in data.get('tenants', []):
+            sheet.write(row, 1, tenant, txt_format)
+            row += 1
+
+        workbook.close()
+        output.seek(0)
+        response.stream.write(output.read())
+        output.close()

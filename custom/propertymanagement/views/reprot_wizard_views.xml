@@ -9,7 +9,7 @@
             <form string="Rent Lease Report">
                 <group>
                     <field name="property_ids" widget="many2many_tags"/>
-                    <field name="owner_id" />
+                    <field name="owner_id"/>
                     <field name="tenant_ids" widget="many2many_tags"/>
                     <field name="type"/>
                     <field name="state"/>
@@ -21,6 +21,11 @@
                 <footer>
                     <!-- Add these buttons back when ready -->
                     <button name="print_pdf_report" string="Print" type="object"/>
+                    <button name="print_xlsx_report"
+                            type="object"
+                            string="Print XLSX"
+                            class="btn-primary"
+                            context="{'active_model': 'rentlease.report.wizard'}"/>
                     <!-- <button string="Cancel" special="cancel" class="btn-secondary"/> -->
                 </footer>
             </form>
