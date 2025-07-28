@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import fields, models, api
 
 
@@ -63,6 +62,16 @@ class Property(models.Model):
             'context': {'default_property_id': self.id},
         }
 
+    @api.model
+    def get_property_amount(self, property_id, type):
+        property = self.browse(int(property_id))
+        if not property.exists():
+            return 0
+        if type == 'rental':
+            return property.rent
+        elif type == 'lease':
+            return property.legal_amount
+        return 0
 
 
 class Facilities(models.Model):

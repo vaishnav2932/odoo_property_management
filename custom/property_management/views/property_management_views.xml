@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    form view-->
+    <record id="property_management_view_form" model="ir.ui.view">
+        <field name="name">property.management.view.form</field>
+        <field name="model">property.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_approve" string="Approve"
+                            class="oe_highlight" type="object" invisible="state != 'toapprove' "
+                            groups="property_management.property_group_manager"/>
+                    <button name="action_confirm" string="Confirm"
+                            class="oe_highlight" type="object" invisible="state != 'draft' "/>
+                    <button name="action_close" string="Close"
+                            class="oe_highlight" type="object" invisible="state != 'confirmed' "/>
+                    <button name="action_return" string="Return"
+                            class="oe_highlight" type="object" invisible="state != 'confirmed' "/>
+                    <button name="action_expired" string="Expired"
+                            class="oe_highlight" type="object" invisible="state != 'confirmed' "/>
+                    <button name="action_restore" string="Restore"
+                            type="object" invisible="state == 'draft' "/>
+                    <button name="action_invoice" string="Create Invoice"
+                            type="object" invisible="state not in 'confirmed' or is_invoiced "/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button"
+                                type="object"
+                                icon="fa-pencil-square-o"
+                                name="action_get_invoice">
+                            <field string="Invoice" name="invoice_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="IN PAYMENT" bg_color="text-bg-success" invisible="payment_state != 'in_payment'"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" invisible="payment_state != 'paid' "/>
+                    <widget name="web_ribbon" title="Partial" bg_color="text-bg-success" invisible="payment_state != 'partial' "/>
+                    <widget name="web_ribbon" title="Unpaid" bg_color="text-bg-danger" invisible="payment_state != 'not_paid' "/>
+                    <!-- Invisible fields -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="reference_number"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <!--                            <field name="property_id"/>-->
+                            <field name="active" invisible="1"/>
+                            <field name="tenant_id" readonly="state != 'draft' "/>
+                            <field name="property_type" widget="radio" readonly="state != 'draft' "/>
+                        </group>
+                        <group>
+                            <!--                            <field name="rent_lease_amount"/>-->
+                            <div name="test_div" class="o_row">
+                                <span class="o_form_label o_td_label o_address_type fw-bold">
+                                    Rent/Lease Period
+                                </span>
+                                <field name="start_date" class="oe_inline" readonly="state != 'draft' "/>
+                                <span style="font-size:35px;">&#8594;&#x2063;</span>
+                                <field name="end_date" class="oe_inline" readonly="state != 'draft' "/>
+                            </div>
+                            <field name="total_days"/>
+                            <!--                            <field name="total"/>-->
+                            <field name="company_id" readonly="state != 'draft' "/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Properties">
+                            <field name="properties_ids" readonly="state != 'draft' "/>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="total"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <!--    list view-->
+    <record id="property_management_view_list" model="ir.ui.view">
+        <field name="name">property.management.view.list</field>
+        <field name="model">property.management</field>
+        <field name="arch" type="xml">
+            <list string="Property's list">
+                <field name="reference_number"/>
+                <field name="property_id"/>
+                <field name="property_type"/>
+                <field name="tenant_id"/>
+                <field name="state"/>
+<!--                <field name="rent_lease_amount"/>-->
+                <field name="total"/>
+                <field name="total_days"/>
+            </list>
+        </field>
+    </record>
+    <!--    search view-->
+    <record id="property_management_view_search" model="ir.ui.view">
+        <field name="name">property.management.view.search</field>
+        <field name="model">property.management</field>
+        <field name="arch" type="xml">
+            <search string="Property's search">
+                <filter string="Rent" name="rent" domain="[('property_type', '=', 'rent')]"/>
+                <filter string="Lease" name="lease" domain="[('property_type', '=', 'lease')]"/>
+                <filter string="Archived" name="archived" domain="[('active','=',False)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="By Type" name="by type"
+                            context="{'group_by':'property_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- window action-->
+    <record id="action_property_management" model="ir.actions.act_window">
+        <field name="name">Property Management</field>
+        <field name="res_model">property.management</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage your first property</p>
+        </field>
+    </record>
+</odoo>

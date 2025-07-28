@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_report_property_rent_form" model="ir.actions.report">
+        <field name="name">Property Report</field>
+        <field name="model">property.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">property_management.property_report_template</field>
+        <field name="report_file">property_management.property_report_template</field>
+        <field name="binding_model_id" ref="property_management.model_property_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>
+

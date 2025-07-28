@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+property_management.access_property_facility,access.property.facility,property_management.model_property_facility,base.group_user,1,1,1,1
+property_management.access_property_property_line,access.property.property.line,property_management.model_property_property_line,base.group_user,1,1,1,1
+access_property_property_user,access.property.property.user,property_management.model_property_property,property_group_user,1,1,0,0
+access_property_property_manager,access.property.property.manager,property_management.model_property_property,property_group_manager,1,1,1,1
+access_property_management_user,access.property.management.user,property_management.model_property_management,property_group_user,1,1,1,0
+access_property_management_manager,access.property.management.manager,property_management.model_property_management,property_group_manager,1,1,1,1
+access_property_wizard,access.property.wizard,property_management.model_property_wizard,base.group_user,1,1,1,1

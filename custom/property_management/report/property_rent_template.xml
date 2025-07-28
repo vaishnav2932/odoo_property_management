@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="property_report_template">
+        <t t-call="web.html_container">
+<!--        <t t-foreach="docs" t-as="doc">-->
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h2>property Report</h2>
+                    <br></br>
+                    <p>
+                        Name :
+<!--                        <span t-field="doc.owner_id.name"/>-->
+                    </p>
+
+
+
+                    <table class="table table-sm o_main_table">
+                        <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                        <thead style="display: table-row-group">
+                            <tr>
+<!--                                <th name="th_property" class="text-left">Property</th>-->
+<!--                                <th name="th_owner" class="text-right">Owner</th>-->
+                                <th name="th_type" class="text-right">Type</th>
+                                <th name="th_tenant" class="text-right">Tenant</th>
+<!--                                <th name="th_from-date" class="text-right">From Date</th>-->
+<!--                                <th name="th_to-date" class="text-right">To Date</th>-->
+<!--                                <th name="th_rent-amount" class="text-right">Rent Amount</th>-->
+<!--                                <th name="th_state" class="text-right">State</th>-->
+                            </tr>
+                        </thead>
+                        <tbody class="property_tbody">
+
+                            <t t-foreach="docs" t-as="doc">
+
+                                <tr t-att-class="'bg-200 font-weight-bold o_line_section'">
+                                    <td name="td_property">
+<!--                                        <t t-esc="doc.property"/>-->
+<!--                                        <span t-esc="doc.property"/>-->
+                                    </td>
+                                    <td name="td_owner">
+<!--                                        <t t-esc="doc.owner"/>-->
+<!--                                        <span t-esc="doc.owner"/>-->
+                                    </td>
+
+                                    <td name="td_tenant">
+                                        <t t-esc="doc.tenant"/>
+<!--                                        <span t-esc="doc.tenant"/>-->
+                                    </td>
+                                    <td name="td_type">
+                                        <t t-esc="doc.property_type"/>
+<!--                                        <span t-esc="doc.property_type"/>-->
+                                    </td>
+                                    <td name="td_from-date">
+<!--                                        <t t-field="doc.start_date"/>-->
+<!--                                        <span t-field="doc.start_date"/>-->
+                                    </td>
+                                    <td name="td_to-date">
+<!--                                        <t t-field="doc.end_date"/>-->
+<!--                                        <span t-field="doc.end_date"/>-->
+                                    </td>
+                                    <td name="td_rent-amount">
+<!--                                        <t t-field="doc.start_date"/>-->
+<!--                                        <span t-field="doc.name"/>-->
+                                    </td>
+                                    <td name="td_state">
+<!--                                        <t t-field="doc.state"/>-->
+<!--                                        <span t-field="doc.state"/>-->
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+<!--            </t>-->
+        </t>
+        </t>
+    </template>
+</odoo>

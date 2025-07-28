@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template to send status change email to the tenant -->
+    <record id="mail_template_status_change" model="mail.template">
+        <field name="name">Status change Email Demo Template</field>
+        <field name="model_id" ref="property_management.model_property_management"/>
+        <field name="email_from">{{ object.company_id.email }}</field>
+        <field name="email_to">{{ object.tenant_id.email }}</field>
+        <field name="subject">Your Property Order {{object.reference_number}} is {{ object.state }}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                <p>Dear
+                    <strong>
+                        <t t-out="object.tenant_id.name"/>
+                    </strong>
+                    ,
+                </p>
+                <p>
+                    Thank you for your order! Please find the details of your property order below:
+                </p>
+                <table style="border: 1px solid #ddd; border-collapse: collapse; width: 100%; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2; text-align: left;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Property</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Unit Price</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="object.properties_ids" t-as="line">
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.properties_id.name"/>
+                                </td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.total_days"/>
+                                </td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.rent_lease_amount"/>
+                                </td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.total_amount"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <p style="margin-top: 20px;">
+                    <strong>Total Amount:</strong>
+                    <t t-out="object.total"/>
+                </p>
+                <p>
+                    Please feel free to contact us if you have any questions about your order.
+                </p>
+                <p>Best Regards,</p>
+                <p>
+                    <strong>
+                        <t t-out="object.company_id.name"/>
+                    </strong>
+                </p>
+            </div>
+        </field>
+    </record>
+    <!-- Template to send payment follow-up email to the tenant -->
+    <record id="mail_template_payment_follow_up" model="mail.template">
+        <field name="name">Payment follow-up Template</field>
+        <field name="model_id" ref="property_management.model_property_management"/>
+        <field name="email_from">{{ object.company_id.email }}</field>
+        <field name="email_to">{{ object.tenant_id.email }}</field>
+        <field name="subject">Property Order {{object.reference_number}}: Payment Follow-up</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                <p>Dear
+                    <strong>
+                        <t t-out="object.tenant_id.name"/>
+                    </strong>
+                    ,
+                </p>
+                <p>
+                    Thank you for your order! Please find the details of your property order below:
+                </p>
+                <table style="border: 1px solid #ddd; border-collapse: collapse; width: 100%; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2; text-align: left;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Property</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Quantity</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Unit Price</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="object.properties_ids" t-as="line">
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.properties_id.name"/>
+                                </td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.total_days"/>
+                                </td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.rent_lease_amount"/>
+                                </td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    <t t-out="line.total_amount"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+                <p style="margin-top: 20px;">
+                    <strong>Total Amount:</strong>
+                    <t t-out="object.total"/>
+                </p>
+                <p>
+                    Please feel free to contact us if you have any questions about your order.
+                </p>
+                <p>Best Regards,</p>
+                <p>
+                    <strong>
+                        <t t-out="object.company_id.name"/>
+                    </strong>
+                </p>
+            </div>
+        </field>
+    </record>
+</odoo>

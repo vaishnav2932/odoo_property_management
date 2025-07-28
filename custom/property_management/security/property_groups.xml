@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record model="ir.module.category" id="module_category_property">
+        <field name="name">Property</field>
+        <field name="description">User access levels for Property Management module</field>
+        <field name="sequence">10</field>
+    </record>
+    <record model="res.groups" id="property_group_user">
+        <field name="name">property User Access</field>
+        <field name="category_id" ref="property_management.module_category_property"/>
+    </record>
+    <record model="res.groups" id="property_group_manager">
+        <field name="name">property Manager Access</field>
+        <field name="category_id" ref="property_management.module_category_property"/>
+        <field name="implied_ids" eval="[Command.link(ref('property_group_user'))]"/>
+    </record>
+</odoo>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    list view-->
+    <record id="property_property_line_view_list" model="ir.ui.view">
+        <field name="name">property.property.line.view.list</field>
+        <field name="model">property.property.line</field>
+        <field name="arch" type="xml">
+            <list string="Property line" editable="top">
+                <field name="properties_id"/>
+                <field name="rent_lease_amount"/>
+                <field name="total_days"/>
+                <field name="total_amount"/>
+            </list>
+        </field>
+    </record>
+    <!-- window action-->
+    <record id="action_property_property_line" model="ir.actions.act_window">
+        <field name="name">Property Line</field>
+        <field name="res_model">property.property.line</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Manage your first property line</p>
+        </field>
+    </record>
+</odoo>

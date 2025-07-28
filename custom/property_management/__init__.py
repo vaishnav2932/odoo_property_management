@@ -1,3 +1,5 @@
-# encoding utf-8
-
-from .import models
+# -*- coding: utf-8 -*-
+"""outer init file"""
+from . import models
+from . import wizard
+from . import report

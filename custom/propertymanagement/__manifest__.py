@@ -20,16 +20,20 @@
         "views/reprot_wizard_views.xml",
         "views/property_management_menus.xml",
         "views/ir_sequence_data.xml",
+        "views/rentlease_website_menu.xml",
         "reports/ir.actions.report.xml",
         "reports/report_template.xml",
         "data/mail.xml",
         "data/ir_crone_data.xml",
+
         # "reports/ir.actions.report.xml",
         # "reports/report_template.xml",
     ],
     'assets': {
-        'web.assets_backend': [
+        'web.assets_frontend': [
+            'propertymanagement/static/src/js/create_record.js',
             'propertymanagement/static/src/js/action_manger.js',
+
         ],
     },
 
