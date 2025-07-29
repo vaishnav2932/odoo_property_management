@@ -1,9 +1,10 @@
 import json
-from odoo import http
-from odoo.http import request, Controller, route, content_disposition
-# from odoo.http import content_disposition, request, route
-from odoo.tools import html_escape
+from dataclasses import fields
 
+from odoo import http,fields
+from odoo.http import content_disposition, request
+from odoo.tools import html_escape
+from odoo.http import request, Controller, route
 
 class XLSXReportController(http.Controller):
     @http.route('/xlsx_reports', type='http', auth='user',
@@ -49,24 +50,32 @@ class PropertyManagementController(http.Controller):
         }
         return request.render('propertymanagement.rentlease_form_template', datas)
 
-    @http.route('/get_property_amount', type='json', auth='public', website=True)
-    def get_property_amount(self, property_id, **kwargs):
-        # Find the latest rent/lease record for the given property
-        rent_record = request.env['rental_and_lease.management'].sudo().search([
-            ('property_id', '=', int(property_id))
-        ], order='id desc', limit=1)
+    @http.route('/form/submit', type='http', auth='public', website=True, methods=['POST'])
+    def form_submit(self, **kwargs):
 
-        amount = 0
-        if rent_record:
-            property_record = rent_record.property_id
-            if rent_record.type == 'rental':
-                amount = property_record.rent_amount
-            elif rent_record.type == 'lease':
-                amount = property_record.leagal_amount  # possibly a typo for legal_amount
+        property_ids = request.httprequest.form.getlist('property_id[]')
+        total_amounts = request.httprequest.form.getlist('total_amount[]')
 
-        return amount
+        prop_line = []
+        for prop_id, amount in zip(property_ids, total_amounts):
+            if prop_id and amount:
+                prop_line.append(fields.Command.create({
+                    'property_id': int(prop_id),
+                    'total_amount': float(amount),
+                }))
+
+        request.env['rental_and_lease.management'].sudo().create({
+            'tenant_id': request.env.user.id,
+            'type': kwargs.get('type'),
+            'start_date': kwargs.get('start_date'),
+            'end_date': kwargs.get('end_date'),
+            'property_ids': prop_line
+        })
+
+        return request.redirect('/')
 
 
-@http.route('/create/rentlease', type="http", auth="public", website=True)
-def create_rent_lease_order(self, **post):
-    return request.render('property_management.rentlease_success_template', )
+
+
+
+
