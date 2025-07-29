@@ -21,6 +21,7 @@
         "views/property_management_menus.xml",
         "views/ir_sequence_data.xml",
         "views/rentlease_website_menu.xml",
+        "views/website_invoices.xml",
         "reports/ir.actions.report.xml",
         "reports/report_template.xml",
         "data/mail.xml",

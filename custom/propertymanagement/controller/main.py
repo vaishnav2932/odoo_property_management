@@ -74,6 +74,25 @@ class PropertyManagementController(http.Controller):
 
         return request.redirect('/')
 
+    @http.route('/my/rentlease', type='http', auth='user', website=True)
+    def my_rent_lease(self):
+        user = request.env.user
+        lease_records = request.env['rental_and_lease.management'].sudo().search([
+            ('tenant_id', '=', user.id)
+        ])
+
+        return request.render('propertymanagement.portal_my_lease', {
+            'leases': lease_records
+        })
+
+    @http.route('/my/invoice/<int:invoice_id>', type='http', auth='user', website=True)
+    def view_invoice(self, invoice_id):
+        invoice = request.env['account.move'].sudo().browse(invoice_id)
+        return request.render('propertymanagement.template_invoice_view', {
+            'invoice': invoice
+        })
+
+
 
 
 

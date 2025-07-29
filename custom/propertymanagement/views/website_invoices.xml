@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="website_rent_lease_menu" model="website.menu">
+        <field name="name">Rental Invoices</field>
+        <field name="url">/my/rentlease</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">90</field>
+    </record>
+    <template id="portal_my_lease" name="My Rent/Lease Info" inherit_id="portal.layout">
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <h2>My Rent/Lease Records</h2>
+            <t t-foreach="leases" t-as="lease">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Lease ID:
+                            <t t-esc="lease.id"/>
+                        </h5>
+                        <p>Start:
+                            <t t-esc="lease.start_date"/>
+                            | End:
+                            <t t-esc="lease.end_date"/>
+                        </p>
+                        <p>Type:
+                            <t t-esc="lease.type"/>
+                        </p>
+                        <p>Total Properties:
+                            <t t-esc="lease.property_ids | length"/>
+                        </p>
+
+                        <t t-if="lease.invoice_ids">
+                            <h6>Invoices:</h6>
+                            <ul>
+                                <t t-foreach="lease.invoice_ids" t-as="inv">
+                                    <li>
+                                        <a t-attf-href="/my/invoices/{{ inv.id }}">{{ inv.name }}</a>
+                                        - Status:
+                                        <t t-esc="inv.payment_state"/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
