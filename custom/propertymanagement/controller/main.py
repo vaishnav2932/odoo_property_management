@@ -1,17 +1,16 @@
+import base64
 import json
-from dataclasses import fields
-
-from odoo import http,fields
-from odoo.http import content_disposition, request
+from odoo.addons.portal.controllers.portal import CustomerPortal
+from odoo import http, fields
 from odoo.tools import html_escape
-from odoo.http import request, Controller, route
+from odoo.http import request, content_disposition
+
 
 class XLSXReportController(http.Controller):
     @http.route('/xlsx_reports', type='http', auth='user',
                 csrf=False)
     def get_report_xlsx(self, model, options, output_format, report_name,
                         token='ads'):
-        """ Return data to python file passed from the javascript"""
         session_unique_id = request.session.uid
         report_object = request.env[model].with_user(session_unique_id)
         options = json.loads(options)
@@ -74,27 +73,48 @@ class PropertyManagementController(http.Controller):
 
         return request.redirect('/')
 
-    @http.route('/my/rentlease', type='http', auth='user', website=True)
-    def my_rent_lease(self):
-        user = request.env.user
-        lease_records = request.env['rental_and_lease.management'].sudo().search([
-            ('tenant_id', '=', user.id)
-        ])
 
-        return request.render('propertymanagement.portal_my_lease', {
-            'leases': lease_records
-        })
+class CustomPortal(CustomerPortal):
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        # if 'portal_rent_lease' in counters:
+        values['rent_lease_counts'] = request.env['property.line'].sudo().search_count([])
+        return values
 
-    @http.route('/my/invoice/<int:invoice_id>', type='http', auth='user', website=True)
-    def view_invoice(self, invoice_id):
-        invoice = request.env['account.move'].sudo().browse(invoice_id)
-        return request.render('propertymanagement.template_invoice_view', {
-            'invoice': invoice
-        })
+    @http.route('/rentalandlease', type='http', auth="public", website=True)
+    def portalRentLeaseList(self, **kwargs):
+        print("controller working")
+        rentlease_obj = request.env['rental_and_lease.management']
+        rentlease = rentlease_obj.search([('tenant_id', '=', request.env.user.id)])
+        values = {'rentlease': rentlease, 'page_name': 'rentalandlease'}
+        return request.render('propertymanagement.portal_my_home_rentlease_views', values)
 
-
-
-
-
+    @http.route('/rentalandlease/<model(rental_and_lease.management):rent>/', type='http', website=True)
+    def portalRentLeaseForm(self, rent, **kwargs):
+        values = {'rentlease': rent, 'page_name': 'rentalandlease_form'}
+        return request.render('propertymanagement.portal_my_home_rentlease_form_views', values)
 
 
+class PropertySnippetController(http.Controller):
+    @http.route('/get_properties', auth="public", type='json',
+                website=True)
+    def get_property(self):
+        """Get the website categories for the snippet."""
+        properties = request.env[
+            'property.management'].sudo().search_read(
+            [], fields=['property_name', 'property_image']
+        )
+        values = {
+            'properties': properties,
+        }
+        return values
+
+
+class PropertyDetailController(http.Controller):
+    @http.route('/get_properties/<model(property.management):properties>/', auth="public", type="http", website=True)
+    def get_property_details(self, properties, **kwargs):
+        image_data = ''
+        if properties.property_image:
+            image_data = base64.b64encode(properties.property_image).decode('utf-8')
+        values = {'properties': properties, 'image_data':image_data, 'page_name': 'property_details'}
+        return request.render('propertymanagement.property_details_view', values)

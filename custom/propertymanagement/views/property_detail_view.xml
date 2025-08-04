@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="property_details_view" name="Property detail view" inherit_id="portal.portal_sidebar">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-if="page_name == 'property_details'">
+                <div class="container mt-5">
+                    <div class="row">
+                        <!-- Product Images -->
+                        <div class="col-6">
+                            <img t-att-src="'/web/image/property.management/%s/property_image' % properties.id"
+                                 class="img-fluid"
+                                 alt="Property Image"/>
+                        </div>
+                        <!-- Product Details -->
+                        <div class="col-3">
+                            <h2 class="mb-3">
+                                <t t-esc="properties.property_name"/>
+                            </h2>
+                            <div class="mb-3">
+                                <span class="me-2">Rent Amount :
+                                    <t t-esc="properties.rent"/>
+                                </span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="me-2">Lease Amount :
+                                    <t t-esc="properties.legal_amount"/>
+                                </span>
+                            </div>
+                            <p class="mb-4">
+                                <t t-esc="properties.description"/>
+                            </p>
+                            <h5>Address</h5>
+                            <p>
+                                <t t-esc="properties.street1"/>,
+                                <t t-esc="properties.street2"/>
+                                <br></br>
+                                <t t-esc="properties.zip"/>
+                                <br></br>
+                                <t t-esc="properties.state_id.name"/>,
+                                <t t-esc="properties.country_id.name"/>
+                            </p>
+                            <div>
+                                <span class="h5">Owner :</span>
+                                <t t-esc="properties.owner_id.complete_name"/>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="mt-4">
+                                <h5>Key Features:</h5>
+                                <ul>
+                                    <li>Industry-leading noise cancellation</li>
+                                    <li>30-hour battery life</li>
+                                    <li>Touch sensor controls</li>
+                                    <li>Speak-to-chat technology</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

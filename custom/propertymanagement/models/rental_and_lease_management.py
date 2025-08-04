@@ -39,6 +39,12 @@ class RentAndLease(models.Model):
     invoice_line_ids = fields.One2many('account.move.line', 'property_line_id')
     is_remaining_to_invoice = fields.Boolean(compute='_compute_is_remaining_to_invoice')
     is_fully_invoiced = fields.Boolean(compute="_compute_fully_invoiced")
+    company_id = fields.Many2one('res.company', store=True, copy=False,
+                                 string="Company",
+                                 default=lambda self: self.env.user.company_id.id)
+    currency_id = fields.Many2one('res.currency', 'Currency', compute='_compute_currency_id',
+                                  readonly=False, required=True, store=True, precompute=True)
+    currency_symbol = fields.Char(related='currency_id.symbol')
     state = fields.Selection(
         [
             ('draft', 'Draft'),
@@ -50,6 +56,11 @@ class RentAndLease(models.Model):
             ('expired', 'Expired'),
         ], default='draft', tracking=True
     )
+
+    @api.depends('company_id')
+    def _compute_currency_id(self):
+        for program in self:
+            program.currency_id = program.company_id.currency_id or program.currency_id
 
     @api.depends('invoice_ids.payment_state')
     def _compute_payment_state(self):

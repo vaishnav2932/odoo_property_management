@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Product Category tab content template-->
+<templates xml:space="preserve">
+        <t t-name="propertymanagement.property_data">
+            <section class="properties_section">
+                <div class="container">
+                    <h3 class="section_heading">Properties</h3>
+                    <div class="properties_wrapper">
+                           <div class="row">
+                                <t t-foreach="result.properties" t-as="property" t-key="property.id">
+                                    <div class="col">
+                                        <div class="card" style="width: 18rem;">
+                                             <img t-if="property.property_image"
+                                                  t-att-src="'data:image/jpeg;base64,' + property.property_image"
+                                                  class="card-img-top"
+                                                  alt="Property image"/>
+                                            <div class="card-body">
+                                                <h5 class="card-title"><t t-esc="property.property_name"/></h5>
+                                                <a t-attf-href="/get_properties/{{property.id}}/" class="btn btn-primary">Details</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                           </div>
+                        </div>
+
+                </div>
+            </section>
+        </t>
+    </templates>

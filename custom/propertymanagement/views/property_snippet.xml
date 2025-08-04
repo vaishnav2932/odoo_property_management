@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="property_template" name="Category Highlight">
+        <section class="properties_section">
+            <div class="container">
+                <div class="alert alert-info">
+                    <h4>Your property Tab snippet will be displayed here...
+                        Please save to view the snippet
+                    </h4>
+                </div>
+            </div>
+        </section>
+    </template>
+</odoo>

@@ -4,7 +4,7 @@
     'summary': """ An ERP for property management """,
     'description': """ A full ERP for property management """,
     'author': "Vyshnav",
-    'depends': ['base', 'mail', 'account', 'sale', 'web'],
+    'depends': ['base', 'mail', 'account', 'sale', 'web', 'website', 'portal', 'website_sale'],
     'category': "Property management",
     'maintainer': "Vyshnav<vyshnav@gmail.com>",
     'sequence': 1,
@@ -21,7 +21,10 @@
         "views/property_management_menus.xml",
         "views/ir_sequence_data.xml",
         "views/rentlease_website_menu.xml",
-        "views/website_invoices.xml",
+        "views/rentlease_wbsite_portal.xml",
+        "views/property_snippet.xml",
+        "views/snippet_editor.xml",
+        "views/property_detail_view.xml",
         "reports/ir.actions.report.xml",
         "reports/report_template.xml",
         "data/mail.xml",
@@ -32,8 +35,10 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'propertymanagement/static/src/js/create_record.js',
-            'propertymanagement/static/src/js/action_manger.js',
+            "/propertymanagement/static/src/xml/property_content_template.xml",
+            "/propertymanagement/static/src/js/property.js",
+            "/propertymanagement/static/src/js/create_record.js",
+            "/propertymanagement/static/src/js/action_manger.js",
 
         ],
     },
