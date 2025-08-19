@@ -110,11 +110,25 @@ class PropertySnippetController(http.Controller):
         return values
 
 
+class PropertyController(http.Controller):
+    @http.route('/get_property', auth="public", type='json',
+                website=True, methods=['POST'])
+    def get_property(self):
+        public_categs = request.env[
+            'property.management'].sudo().search_read(
+               fields=['property_name','property_image'])
+        values = {
+            'properties': public_categs,
+        }
+        return values
+
 class PropertyDetailController(http.Controller):
     @http.route('/get_properties/<model(property.management):properties>/', auth="public", type="http", website=True)
     def get_property_details(self, properties, **kwargs):
         image_data = ''
         if properties.property_image:
             image_data = base64.b64encode(properties.property_image).decode('utf-8')
-        values = {'properties': properties, 'image_data':image_data, 'page_name': 'property_details'}
-        return request.render('propertymanagement.property_details_view', values)
+        values = {'properties': properties, 'image_data':image_data}
+        return request.render('propertymanagement.property_detail_view', values)
+
+

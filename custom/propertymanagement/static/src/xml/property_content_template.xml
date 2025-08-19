@@ -1,30 +1,70 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--Product Category tab content template-->
 <templates xml:space="preserve">
-        <t t-name="propertymanagement.property_data">
-            <section class="properties_section">
-                <div class="container">
-                    <h3 class="section_heading">Properties</h3>
-                    <div class="properties_wrapper">
-                           <div class="row">
-                                <t t-foreach="result.properties" t-as="property" t-key="property.id">
-                                    <div class="col">
-                                        <div class="card" style="width: 18rem;">
-                                             <img t-if="property.property_image"
-                                                  t-att-src="'data:image/jpeg;base64,' + property.property_image"
-                                                  class="card-img-top"
-                                                  alt="Property image"/>
-                                            <div class="card-body">
-                                                <h5 class="card-title"><t t-esc="property.property_name"/></h5>
-                                                <a t-attf-href="/get_properties/{{property.id}}/" class="btn btn-primary">Details</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </t>
-                           </div>
-                        </div>
-
+   <t t-name="property_management_erp.property_data">
+      <section class="properties_section">
+          <div class="container">
+              <div t-att-id="properties_carousel" class="carousel slide"
+                   data-bs-ride="carousel">
+                  <ol class="carousel-indicators">
+                  <t t-foreach="chunks" t-as="property_chunk"
+                     t-key="property_chunk_index">
+                    <li t-att-class="property_chunk_index === 0 ? 'active' : ''"
+                        t-att-data-bs-target="'#' + properties_carousel"
+                        t-att-data-bs-slide-to="property_chunk_index"/>
+                  </t>
+                </ol>
+                  <div class="carousel-inner">
+                  <t t-foreach="chunks" t-as="property_chunk"
+                     t-key="property_chunk_index">
+                    <div
+                        t-att-class="property_chunk_index === 0 ? 'carousel-item active' : 'carousel-item'">
+                      <div class="row"
+                           style="margin-top:10%;margin-bottom:10%;">
+                        <t t-foreach="property_chunk" t-as="property"
+                           t-key="property.id">
+                          <div class="col">
+                            <div class="card">
+                              <img t-if="property.property_image"
+                                   t-att-src="'data:image/jpeg;base64,' + property.property_image"
+                                   class="card-img-top"
+                                   alt="Property image"/>
+                                <a t-att-href="'/get_properties/' + property.id + '/'">
+                              <div class="card-body">
+                                <h5 class="card-title">
+                                  <t t-esc="property.property_name"/>
+                                </h5>
+                              </div>
+                            </a>
+                            </div>
+                          </div>
+                        </t>
+                      </div>
+                    </div>
+                  </t>
                 </div>
-            </section>
-        </t>
-    </templates>
+              </div>
+          </div>
+          <a class="carousel-control-prev"
+             t-att-href="'#' + properties_carousel"
+             data-bs-slide="prev"
+             role="button"
+             aria-label="Previous"
+             title="Previous">
+              <span class="fa fa-chevron-circle-left fa-2x carousel-arrow-color"
+                    style="color:black;"/>
+              <span class="visually-hidden">Previous</span>
+           </a>
+          <a class="carousel-control-next"
+             t-att-href="'#' + properties_carousel"
+             data-bs-slide="next"
+             role="button"
+             aria-label="Next"
+             title="Next">
+              <span class="fa fa-chevron-circle-right fa-2x carousel-arrow-color"
+                    style="color:black;"/>
+              <span class="visually-hidden">Next</span>
+          </a>
+      </section>
+   </t>
+</templates>
+<!---->

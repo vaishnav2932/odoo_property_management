@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+   <t t-name="custom_pos_receipt.ProductCard"
+      t-inherit="point_of_sale.ProductCard" t-inherit-mode="extension">
+       <xpath expr="//div[hasclass('product-img')]" position="before">
+          <t t-if="props.product.rating == '1'">
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                </t>
+                <t t-elif="props.product.rating == '2'">
+                  <div>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                  </div>
+                </t>
+                <t t-elif="props.product.rating == '3'">
+                  <div>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                  </div>
+                </t>
+                <t t-elif="props.product.rating == '4'">
+                  <div>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                  </div>
+                </t>
+                <t t-elif="props.product.rating == '5'">
+                  <div>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                    <span class="fa fa-star" style="color:#FFFF00;"/>
+                  </div>
+                </t>
+       </xpath>
+   </t>
+</templates>
+

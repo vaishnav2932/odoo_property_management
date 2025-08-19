@@ -7448,6 +7448,9 @@ class Model(AbstractModel):
     _abstract = False           # not abstract
     _transient = False          # not transient
 
+    def _get_default_payment_method_codes(self):
+        pass
+
 
 class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily

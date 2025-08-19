@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment_provider_payu" model="payment.provider">
+    <field name="name">PayU</field>
+    <field name="code">payu</field>
+    <field name="sequence">1000</field>
+    <field name="is_published">True</field>
+    <field name="state">enabled</field>
+    <field name="company_id" ref="base.main_company"/>
+<!--    <field name="image" type="base64" file="payment_payu/static/description/icon.png"/>-->
+    <field name="support_tokenization">False</field>
+    <field name="support_express_checkout">False</field>
+    <field name="support_refund">partial</field>
+</record>
+
+</odoo>

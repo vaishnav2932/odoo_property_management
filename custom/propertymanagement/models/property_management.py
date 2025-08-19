@@ -35,6 +35,19 @@ class Property(models.Model):
             ('sold', 'Sold')
         ], tracking=True, default='draft'
     )
+    company_id = fields.Many2one('res.company',
+                                 default=lambda self: self.env.company.id)
+    currency_id = fields.Many2one('res.currency', 'Currency',
+                                  compute='_compute_currency_id',
+                                  readonly=False, required=True, store=True,
+                                  precompute=True)
+    currency_symbol = fields.Char(related='currency_id.symbol')
+
+    @api.depends('company_id')
+    def _compute_currency_id(self):
+        for program in self:
+            program.currency_id = (program.company_id.currency_id or
+                                   program.currency_id)
 
     def unlink(self):
         for record in self:

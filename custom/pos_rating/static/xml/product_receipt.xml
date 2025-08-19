@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-name="rating.OrderReceipt" t-inherit="point_of_sale.OrderReceipt"
+       t-inherit-mode="extension">
+        <xpath expr="//Orderline" position="inside">
+            <div class="rating-wrap">
+                <div class="rating_header">Rating:</div>
+                <div t-if="line.rating >= 1" class="star fa fa-star"></div>
+                <div t-if="line.rating >= 2" class="star fa fa-star"></div>
+                <div t-if="line.rating >= 3" class="star fa fa-star"></div>
+                <div t-if="line.rating >= 4" class="star fa fa-star"></div>
+                <div t-if="line.rating >= 5" class="star fa fa-star"></div>
+            </div>
+        </xpath>
+    </t>
+</templates>
