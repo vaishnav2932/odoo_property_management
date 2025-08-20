@@ -38,15 +38,16 @@ class PaymentTransaction(models.Model):
 
         # Construct hash
         hash_seq = "|".join([
-            payu_values['key'],
-            payu_values['txnid'],
-            payu_values['amount'],
-            payu_values['productinfo'],
-            payu_values['firstname'],
-            payu_values['email'],
+            str(payu_values['key']),
+            str(payu_values['txnid']),
+            str(payu_values['amount']),
+            str(payu_values['productinfo']),
+            str(payu_values['firstname']),
+            str(payu_values['email']),
             '', '', '', '', '', '', '', '', '', '',  # udf1–udf10
             self.provider_id.payu_salt,
         ])
+
         payu_values['hash'] = hashlib.sha512(hash_seq.encode('utf-8')).hexdigest().lower()
 
         return {
@@ -55,22 +56,60 @@ class PaymentTransaction(models.Model):
         }
 
     def _get_tx_from_notification_data(self, provider_code, notification_data):
-        tx = super()._get_tx_from_notification_data(provider_code,
-                                                    notification_data)
+        """Find the transaction record using PayU's txnid."""
+        tx = super()._get_tx_from_notification_data(provider_code, notification_data)
         if provider_code != 'payu' or len(tx) == 1:
             return tx
 
         reference = notification_data.get('txnid')
         if not reference:
-            raise ValidationError(
-                "PayUmoney: " + _("Received data with missing reference (%s)",
-                                  reference)
-            )
-        tx = self.search(
-            [('reference', '=', reference), ('provider_code', '=', 'payu')])
+            raise ValidationError(_("PayU: Received data with missing txnid."))
+
+        tx = self.search([
+            ('reference', '=', reference),
+            ('provider_code', '=', 'payu')
+        ])
         if not tx:
-            raise ValidationError(
-                "PayUmoney: " + _("No transaction found matching reference %s.",
-                                  reference)
-            )
+            raise ValidationError(_("PayU: No transaction found matching reference %s.") % reference)
         return tx
+
+    # def _process_notification_data(self, notification_data):
+    #     """Validate PayU response and update transaction state."""
+    #     res = super()._process_notification_data(notification_data)
+    #
+    #     if self.provider_code != 'payu':
+    #         return res
+    #
+    #     provider = self.provider_id
+    #     salt = provider.payu_salt
+    #     key = provider.payu_merchant_key
+    #     status = notification_data.get('status', '')
+    #
+    #     # Build reverse hash according to PayU spec
+    #     parts = [salt, status]
+    #     for i in range(10, 0, -1):  # udf10 → udf1
+    #         parts.append(notification_data.get(f'udf{i}', '') or '')
+    #     parts += [
+    #         notification_data.get('email', ''),
+    #         notification_data.get('firstname', ''),
+    #         notification_data.get('productinfo', ''),
+    #         str(notification_data.get('amount', '')),
+    #         notification_data.get('txnid', ''),
+    #         key,
+    #     ]
+    #
+    #     expected_hash = hashlib.sha512('|'.join(parts).encode('utf-8')).hexdigest().lower()
+    #     received_hash = (notification_data.get('hash') or '').lower()
+    #
+    #     if expected_hash != received_hash:
+    #         raise ValidationError(_("PayU: Invalid hash received."))
+    #
+    #     # Update transaction state based on status
+    #     if status == 'success':
+    #         self._set_done()
+    #     elif status == 'failure':
+    #         self._set_canceled()
+    #     else:
+    #         self._set_error(_("PayU: Payment status %s") % status)
+    #
+    #     return True
