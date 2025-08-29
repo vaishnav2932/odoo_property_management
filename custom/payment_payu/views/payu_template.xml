@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <template id="redirect_form">
         <form t-att-action="api_url" method="post">
-            <input type="hidden" name="key" t-att-value="payumoney_values['key']"/>
-            <input type="hidden" name="txnid" t-att-value="payumoney_values['txnid']"/>
-            <input type="hidden" name="amount" t-att-value="payumoney_values['amount']"/>
-            <input type="hidden" name="productinfo" t-att-value="payumoney_values['productinfo']"/>
-            <input type="hidden" name="firstname" t-att-value="payumoney_values['firstname']"/>
-            <input type="hidden" name="email" t-att-value="payumoney_values['email']"/>
-            <input type="hidden" name="phone" t-att-value="payumoney_values['phone']"/>
-            <input type="hidden" name="surl" t-att-value="payumoney_values['surl']"/>
-            <input type="hidden" name="furl" t-att-value="payumoney_values['furl']"/>
-            <input type="hidden" name="service_provider" value="payu_paisa"/>
-            <input type="hidden" name="hash" t-att-value="payumoney_values['hash']"/>
+            <input type="hidden" name="txnid"
+                   t-att-value="payumoney_values['txnid']"/>
+            <input type="hidden" name="amount"
+                   t-att-value="payumoney_values['amount']"/>
+            <input type="hidden" name="productinfo"
+                   t-att-value="payumoney_values['productinfo']"/>
+            <input type="hidden" name="firstname"
+                   t-att-value="payumoney_values['firstname']"/>
+            <input type="hidden" name="email"
+                   t-att-value="payumoney_values['email']"/>
+            <input type="hidden" name="surl"
+                   t-att-value="payumoney_values['surl']"/>
+            <input type="hidden" name="furl"
+                   t-att-value="payumoney_values['furl']"/>
+            <input type="hidden" name="key"
+                   t-att-value="payumoney_values['key']"/>
+            <input type="hidden" name="hash"
+                   t-att-value="payumoney_values['hash']"/>
         </form>
-
     </template>
-
 </odoo>
