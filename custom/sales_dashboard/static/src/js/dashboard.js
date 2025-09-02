@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 export class SaleDashboard extends Component {
     setup() {
         this.orm = useService("orm");
-        this.state = useState({ total_quotation: 0, total_sale_order: 0, total_revenue: 0 });
+        this.state = useState({ total_quotation: 0, total_sale_order: 0, total_revenue: 0, customers: [] });
         onMounted(() => {
             this.renderChart();
         });
@@ -15,33 +15,41 @@ export class SaleDashboard extends Component {
     }
     async loadData() {
         try {
-            const result = await this.orm.call("sale.order", "get_sale_order_data", [], {});
 
+            const result = await this.orm.call("sale.order", "get_sale_order_data", [], {});
             this.state.total_quotation = result.total_quotation;
             this.state.total_sale_order = result.total_sale_order;
             this.state.total_revenue = result.total_revenue;
             console.log(result)
-            console.log(sales_team_data)
-
+            const top_customer_list = await this.orm.call('sale.order','get_top_customer', [],{});
+            this.state.customers = top_customer_list;
         } catch (err) {
             console.error("Error fetching quotations:", err);
+            this.state.customers = [];
         }
     }
 
     async renderChart() {
-      const sales_team = document.getElementById("dashboard_chart");
       const sales_team_result = await this.orm.call('sale.order','get_sales_team',[],{})
+      console.log(sales_team_result)
+      const sales_team_data = sales_team_result;
+      const sales_team_labels = sales_team_data.map(order => order.team_name);
+      const sales_team_name = sales_team_labels.map(team => team.en_US);
+      const values = sales_team_data.map(order => order.total_orders);
+      console.log(sales_team_name)
+      console.log(sales_team_labels)
+      const sales_person_result = await this.orm.call('sale.order','get_sales_person',[],{})
+      console.log(sales_person_result)
+      const sales_person_values = sales_person_result.map(order => order.total_orders);
+      const sales_person_labels = sales_person_result.map(order => order.user_name);
+      console.log(sales_person_labels)
 
-
-    const sales_team_data = sales_team_result.sales_team || [];
-    const labels = sales_team_data.map(team => team.name);
-    const values = sales_team_data.map(team => team.sale_order_count);
-
+      const sales_team = document.getElementById("dashboard_chart");
       if (sales_team) {
         new Chart(sales_team, {
-            type: "bar",
+            type: "line",
             data: {
-                labels: labels,
+                labels: sales_team_name,
                 datasets: [{
                     backgroundColor: "black",
                     data: values
@@ -54,17 +62,15 @@ export class SaleDashboard extends Component {
         });
       }
 
-
-
       const sales_person = document.getElementById("dashboard_sales_chart");
       if (sales_person) {
         new Chart(sales_person, {
-            type: "bar",
+            type: "line",
             data: {
-                labels: ["bar1", "bar2", "bar3", "bar4"],
+                labels: sales_person_labels,
                 datasets: [{
                     backgroundColor: "black",
-                    data: [0, 10, 20, 30]
+                    data: sales_person_values
                 }]
             },
             options: {
@@ -74,21 +80,25 @@ export class SaleDashboard extends Component {
         });
       }
 
-      const top_customer = document.getElementById("dashboard_customers_chart");
-      if (top_customer) {
-        new Chart(top_customer, {
+      const lowest_selling_product = document.getElementById("dashboard_lowest_product_chart");
+      const lowest_selling_product_data = await this.orm.call('sale.order','get_lowest_selling_product',[],{})
+      console.log('lowest:',lowest_selling_product_data);
+      const lowest_selling_product_label = lowest_selling_product_data.map(product => product.name);
+      const lowest_selling_product_value = lowest_selling_product_data.map(product => product.total);
+      if (lowest_selling_product) {
+        new Chart(lowest_selling_product, {
             type: "bar",
             data: {
-                labels: ["bar1", "bar2", "bar3", "bar4"],
+                labels: lowest_selling_product_label,
                 datasets: [{
                     backgroundColor: "black",
-                    data: [0, 10, 20, 30],
+                    data: lowest_selling_product_value,
 
                 }]
             },
             options: {
                     responsive: true,
-                    indexAxis: 'y',
+
                     legend: { display: false }
             }
         });

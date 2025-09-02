@@ -116,41 +116,93 @@
             </div>
         </div>
         <!--        chart-->
-        <div class="row" style="margin-left:95px;margin-top:30px;">
-            <div class="col-4" style="width:500px;">
-                <center>
-                    <h2>Sales by sales team</h2>
-                </center>
-                <canvas id="dashboard_chart" height="400px" width="500px"/>
-            </div>
-            <div class="col-4" style="width:500px;">
-                <center>
-                    <h2>Sales by sales person</h2>
-                </center>
-                <canvas id="dashboard_sales_chart" height="400px"
-                        width="500px"/>
-            </div>
-            <div class="col-4" style="width:500px;">
-                <center>
-                    <h2>Top 10 customers</h2>
-                </center>
-                <canvas id="dashboard_customers_chart" height="400px"
-                        width="500px"/>
-            </div>
-            <div class="col-4" style="width:500px;">
+        <div class="row">
+            <div class="row border border-4 rounded m-5"
+                 style="margin-top:5%;width:55%;">
+                <div class="col-6 mt-5">
                     <center>
-                        <h2>Order Status</h2>
+                        <h2>Sales by sales team</h2>
                     </center>
-                    <canvas id="dashboard_order_status_chart"/>
+                    <canvas id="dashboard_chart" height="400px"
+                            width="500px"/>
+                </div>
+                <div class="col-6 mt-5">
+                    <center>
+                        <h2>Sales by sales person</h2>
+                    </center>
+                    <canvas id="dashboard_sales_chart" height="400px"
+                            width="500px"/>
+                </div>
             </div>
-
-            <div class="col-4" style="width:500px;">
+            <div class="col-4 mt-5" style="width:500px;">
                 <center>
-                    <h2>Lowest selling products</h2>
+                    <h2>Top Customers</h2>
                 </center>
-                <canvas id="dashboard_lowest_product_chart" height="400px"
-                        width="500px"/>
+                <table class="table table-bordered mt-3" id="top_customers">
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Total Orders</th>
+                            <th>Total Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.customers" t-as="customer" t-key="customer.partner">
+                            <tr>
+                                <td>
+                                    <t t-esc="customer.partner"/>
+                                </td>
+                                <td>
+                                    <t t-esc="customer.total_orders"/>
+                                </td>
+                                <td>
+                                    <t t-esc="customer.total_amount"
+                                       t-options="{widget: 'monetary', display_currency: 'company_currency'}"/>
+                                </td>
+                            </tr>
+                        </t>
+
+                    </tbody>
+                </table>
+
+                <!--                <center>-->
+                <!--                    <h2>Top 10 customers</h2>-->
+                <!--                </center>-->
+                <!--                <canvas id="dashboard_customers_chart" height="400px"-->
+                <!--                        width="500px"/>-->
             </div>
         </div>
+
+
+
+                <center>
+                    <h2>Lowest Selling Products</h2>
+                </center>
+                <canvas id="dashboard_lowest_product_chart"
+                       />
+
+            <!--                <div class="col-6 mt-5">-->
+            <!--                    <center>-->
+            <!--                        <h2>Hieghest Selling Products</h2>-->
+            <!--                    </center>-->
+            <!--                    <canvas id="dashboard_highest_product_chart" height="400px"-->
+            <!--                            width="500px"/>-->
+            <!--                </div>-->
+
+        <!--            <div class="col-4" style="width:500px;">-->
+        <!--                    <center>-->
+        <!--                        <h2>Order Status</h2>-->
+        <!--                    </center>-->
+        <!--                    <canvas id="dashboard_order_status_chart"/>-->
+        <!--            </div>-->
+
+        <!--            <div class="col-4" style="width:500px;">-->
+        <!--                <center>-->
+        <!--                    <h2>Lowest selling products</h2>-->
+        <!--                </center>-->
+        <!--                <canvas id="dashboard_lowest_product_chart" height="400px"-->
+        <!--                        width="500px"/>-->
+        <!--            </div>-->
+
     </t>
 </templates>
