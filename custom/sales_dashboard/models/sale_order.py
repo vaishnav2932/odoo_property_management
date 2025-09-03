@@ -31,7 +31,8 @@ class SaleOrder(models.Model):
         query = f"""
              SELECT
                 crm_team.name AS team_name,
-                COUNT(sale_order.id) AS total_orders
+                COUNT(sale_order.id) AS total_orders,
+                SUM(amount_total) AS total_amount
              FROM
                 crm_team
              LEFT JOIN
@@ -49,7 +50,8 @@ class SaleOrder(models.Model):
         query = f"""
              SELECT
                     res_partner.name AS user_name,
-                    COUNT(sale_order.id) AS total_orders
+                    COUNT(sale_order.id) AS total_orders,
+                    SUM(amount_total) AS total_amount
                 FROM 
                     sale_order
                 INNER JOIN
@@ -86,33 +88,57 @@ class SaleOrder(models.Model):
     @api.model
     def get_lowest_selling_product(self):
         query = f"""
-                SELECT 
-                     name,SUM(price_total) AS total
-                FROM
-                    sale_order_line
-                GROUP BY
-                    name
-                ORDER BY
-                    total DESC;
-        """
+                   SELECT 
+                        name,SUM(price_total) AS total
+                   FROM
+                       sale_order_line
+                   GROUP BY
+                       name
+                   ORDER BY
+                       total DESC;
+           """
         self.env.cr.execute(query)
         return self.env.cr.dictfetchall()
-        # sale_orders = self.env['sale.order'].search(
-        #     [('state', '=', 'sale')])
-        # team_sales = {}
-        # for order in sale_orders:
-        #     team_name = order.team_id.name
-        #     sales_person = order.user_id.name
-        #
-        #     team_sales[team_name] = {
-        #         'team_name': team_name,
-        #         'sale_person': sales_person,
-        #         'amount_total': 0.0,
-        #         'invoiced': 0.0,
-        #     }
-        #     team_sales[team_name]['amount_total'] += order.amount_total
-        #     team_sales[team_name]['invoiced'] += order.amount_invoiced
-        # return list(team_sales.values())
 
-        # @api.model
-        # def get_sales_person(self):
+    @api.model
+    def get_highest_selling_product(self):
+        query = f"""
+                   SELECT 
+                        name,SUM(price_total) AS total
+                   FROM
+                       sale_order_line
+                   GROUP BY
+                       name
+                   ORDER BY
+                       total;
+               """
+        self.env.cr.execute(query)
+        return self.env.cr.dictfetchall()
+
+    @api.model
+    def get_order_status(self):
+        query = f"""
+                 SELECT 
+                   state,
+                   COUNT(state) AS state_count
+                 FROM 
+                   sale_order   
+                 GROUP BY
+                    state;
+                 """
+        self.env.cr.execute(query)
+        return self.env.cr.dictfetchall()
+
+    @api.model
+    def get_invoice_status(self):
+        query = f"""
+                SELECT 
+                   invoice_status,
+                   COUNT(invoice_status) 
+                FROM 
+                   sale_order
+                GROUP BY
+                   invoice_status;
+                """
+        self.env.cr.execute(query)
+        return self.env.cr.dictfetchall()

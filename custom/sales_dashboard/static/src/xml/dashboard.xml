@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <templates>
     <t t-name="sales_dashboard.SaleDashboard">
         <div class="">
@@ -13,10 +12,10 @@
         </div>
         <div class="row main-section"
              style="margin-left: 120px; margin-right:120px; margin-top:20px">
-            <!--            Lead Tile-->
-            <div id="leads" class="col-md-4 col-sm-6 tot_tasks oh-payslip"
+            <!--            quotation Tile-->
+            <div id="quotations" class="col-md-4 col-sm-6 tot_tasks oh-payslip"
                  style=" overflow: hidden; padding-top: 30px;">
-                <div class="oh-card" style="box-shadow:2px 4px 8px 2px rgba(0,0,0.3,0.2);
+                <div class="oh-card" type="object"  t-on-click="action_quotation" style="box-shadow:2px 4px 8px 2px rgba(0,0,0.3,0.2);
                 display: flex; justify-content: center;" role="button">
                     <div class="oh-card-body"
                          style="padding: 5px 5px; float: left; width: 100%;
@@ -47,8 +46,8 @@
                     </div>
                 </div>
             </div>
-            <!--       Opportunity Tile-->
-            <div id="opportunity"
+            <!--       order Tile-->
+            <div id="orders"
                  class="col-md-4 col-sm-6 tot_tasks oh-payslip"
                  style=" overflow: hidden; padding-top: 30px;">
                 <div class="oh-card" style="box-shadow:2px 4px 8px 2px rgba(0,0,0.3,0.2);
@@ -116,13 +115,21 @@
             </div>
         </div>
         <!--        chart-->
+
         <div class="row">
             <div class="row border border-4 rounded m-5"
-                 style="margin-top:5%;width:55%;">
+                 style="margin-top:5%;width:60%;">
+
                 <div class="col-6 mt-5">
+
                     <center>
                         <h2>Sales by sales team</h2>
                     </center>
+                     <select class="form-control" id="sale_filter" style="width:30%;">
+                    <option value="">Filter</option>
+                    <option value="val1">By Count</option>
+                    <option value="val2">By Price</option>
+                </select>
                     <canvas id="dashboard_chart" height="400px"
                             width="500px"/>
                 </div>
@@ -130,6 +137,11 @@
                     <center>
                         <h2>Sales by sales person</h2>
                     </center>
+                     <select class="form-control" id="sale_person_filter" style="width:30%;">
+                    <option value="">Filter</option>
+                    <option value="val1">By Count</option>
+                    <option value="val2">By Price</option>
+                </select>
                     <canvas id="dashboard_sales_chart" height="400px"
                             width="500px"/>
                 </div>
@@ -147,7 +159,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-foreach="state.customers" t-as="customer" t-key="customer.partner">
+                        <t t-foreach="state.customers" t-as="customer"
+                           t-key="customer.partner">
                             <tr>
                                 <td>
                                     <t t-esc="customer.partner"/>
@@ -164,45 +177,37 @@
 
                     </tbody>
                 </table>
-
-                <!--                <center>-->
-                <!--                    <h2>Top 10 customers</h2>-->
-                <!--                </center>-->
-                <!--                <canvas id="dashboard_customers_chart" height="400px"-->
-                <!--                        width="500px"/>-->
             </div>
         </div>
 
-
-
+        <div class="row m-5">
+            <div class="col-8">
                 <center>
                     <h2>Lowest Selling Products</h2>
                 </center>
-                <canvas id="dashboard_lowest_product_chart"
-                       />
+                <canvas id="dashboard_lowest_product_chart"/>
+            </div>
+            <div class="col-4" style="width:30%;">
+                <center>
+                    <h2>Order Status</h2>
+                </center>
+                <canvas id="dashboard_order_status_chart"/>
+            </div>
+        </div>
 
-            <!--                <div class="col-6 mt-5">-->
-            <!--                    <center>-->
-            <!--                        <h2>Hieghest Selling Products</h2>-->
-            <!--                    </center>-->
-            <!--                    <canvas id="dashboard_highest_product_chart" height="400px"-->
-            <!--                            width="500px"/>-->
-            <!--                </div>-->
-
-        <!--            <div class="col-4" style="width:500px;">-->
-        <!--                    <center>-->
-        <!--                        <h2>Order Status</h2>-->
-        <!--                    </center>-->
-        <!--                    <canvas id="dashboard_order_status_chart"/>-->
-        <!--            </div>-->
-
-        <!--            <div class="col-4" style="width:500px;">-->
-        <!--                <center>-->
-        <!--                    <h2>Lowest selling products</h2>-->
-        <!--                </center>-->
-        <!--                <canvas id="dashboard_lowest_product_chart" height="400px"-->
-        <!--                        width="500px"/>-->
-        <!--            </div>-->
-
+        <div class="row m-5">
+            <div class="col-8">
+                <center>
+                    <h2>Highest Selling Products</h2>
+                </center>
+                <canvas id="dashboard_highest_product_chart"/>
+            </div>
+            <div class="col-4" style="width:30%;">
+                <center>
+                    <h2>Invoice Status</h2>
+                </center>
+                <canvas id="dashboard_invoice_status_chart"/>
+            </div>
+        </div>
     </t>
 </templates>
